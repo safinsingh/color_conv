@@ -1,8 +1,10 @@
 use crate::{Cmyk, Color, Hsl};
 use std::fmt;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+///
 /// A representation of the RGB (red, green, blue) color format.
+///
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Hash)]
 pub struct Rgb {
 	/// Red value
 	pub red: u8,
@@ -13,6 +15,7 @@ pub struct Rgb {
 }
 
 impl Rgb {
+	///
 	/// Returns a new Rgb object given red, green, and blue values.
 	///
 	/// # Arguments
@@ -33,6 +36,7 @@ impl Rgb {
 	///
 	/// * `red`, `green`, and `blue` are all 8-bit integers with a maximum value
 	///   of 255.
+	///
 	pub fn new(red: u8, green: u8, blue: u8) -> Self {
 		Self { red, green, blue }
 	}

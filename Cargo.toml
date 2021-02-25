@@ -1,10 +1,12 @@
 [package]
 name = "color_conv"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Safin Singh <safin.singh@gmail.com>"]
 edition = "2018"
-license = "GPL-3.0"
+license = "AGPL-3.0"
 description = "A color conversion library for Rust"
+repository = "https://github.com/safinsingh/color_conv"
+keywords = ["color", "rgb", "hex", "cmyk", "hsl"]
 
 [dependencies]
 thiserror = "1.0.24"

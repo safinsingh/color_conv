@@ -5,12 +5,13 @@
 	trivial_numeric_casts
 )]
 
+//!
 //! `color_conv` is a helper library for easily and programmatically converting
 //! between the `RGB`, `CMYK`, `HSL`, and `hex` color formats.
 //!
 //! ```toml
 //! [dependencies]
-//! color_conv = "0.1"
+//! color_conv = "0.2"
 //! ```
 //!
 //! # Example
@@ -25,21 +26,45 @@
 //!
 //! assert_eq!(Rgb::new(0, 255, 255), cyan_rgb);
 //! ```
+//!
 
 /// CMYK-specific structures
 pub mod cmyk;
-/// Crate-wide errors
-pub mod error;
 /// HSL-specific strucures
 pub mod hsl;
 /// RGB-specific strucures
 pub mod rgb;
 
-pub use self::{cmyk::Cmyk, error::Error, hsl::Hsl, rgb::Rgb};
+pub use self::{cmyk::Cmyk, hsl::Hsl, rgb::Rgb};
+use thiserror::Error as ThisError;
 
+#[derive(ThisError, Debug)]
+///
+/// Crate-wide Error type.
+///
+pub enum Error {
+	///
+	/// Occurs when a parameter representing a percentage value is greater than
+	/// 100. This error can be thrown by [`Cmyk::new`](crate::Cmyk::new) or
+	/// [`Hsl::new`](crate::Hsl::new), both of which perform this check.
+	///
+	#[error("Percentage overflow: value is larger than 100!")]
+	PercentageOverflow,
+	///
+	/// Occurs when a parameter representing a degree value is greater than 360.
+	/// 100. This error can be thrown by  [`Hsl::new`](crate::Hsl::new), which
+	/// performs this check.
+	///
+	#[error("Degree overflow: value is larger than 360!")]
+	DegreeOverflow,
+}
+
+///
 /// Unifying `Color` trait which encompasses each of the structs provided by
 /// this crate.
+///
 pub trait Color {
+	///
 	/// Convert to [`Rgb`]
 	///
 	/// # Examples
@@ -55,8 +80,10 @@ pub trait Color {
 	/// assert_eq!(Rgb::new(0, 255, 255), cyan_rgb);
 	/// # Ok::<(), color_conv::Error>(())
 	/// ```
+	///
 	fn to_rgb(self) -> Rgb;
 
+	///
 	/// Convert to [`Cmyk`] with the possibility of failing if any of the
 	/// percentage values are above 100
 	///
@@ -72,8 +99,10 @@ pub trait Color {
 	///
 	/// assert_eq!(cyan_cmyk, Cmyk::new_unchecked(100, 0, 0, 0));
 	/// ```
+	///
 	fn to_cmyk(self) -> Cmyk;
 
+	///
 	/// Convert to [`Hsl`] with the possibility of failing if any of the
 	/// percentage values are above 100 or degree values are above 360
 	///
@@ -89,8 +118,10 @@ pub trait Color {
 	///
 	/// assert_eq!(cyan_cmyk, Cmyk::new_unchecked(100, 0, 0, 0));
 	/// ```
+	///
 	fn to_hsl(self) -> Hsl;
 
+	///
 	/// Convert to a [`String`] containing the hex code of the color prefixed
 	/// with a hashtag (`#`)
 	///
@@ -105,5 +136,6 @@ pub trait Color {
 	///
 	/// assert_eq!(cyan_hex, String::from("#00ffff"));
 	/// ```
+	///
 	fn to_hex_string(self) -> String;
 }

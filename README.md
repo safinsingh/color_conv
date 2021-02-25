@@ -1,10 +1,10 @@
-# Crate: `color_conv`
+# color_conv
 
 [color_conv](https://crates.io/crates/color_conv) is a simple and lightweight helper library for easily and programmatically converting between the `RGB`, `CMYK`, `HSL`, and `hex` color formats.
 
 ```toml
 [dependencies]
-color_conv = "0.1"
+color_conv = "0.2"
 ```
 
 # Example

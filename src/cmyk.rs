@@ -1,8 +1,10 @@
 use crate::{Color, Error, Hsl, Rgb};
 use std::fmt;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+///
 /// A representation of the CMYK (cyan, magenta, yellow, key) color format.
+///
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Hash)]
 pub struct Cmyk {
 	/// Cyan value (percentage)
 	pub cyan: u8,
@@ -15,6 +17,7 @@ pub struct Cmyk {
 }
 
 impl Cmyk {
+	///
 	/// Returns a Result containing a new Cmyk object given cyan, magenta,
 	/// yellow, and key values. Will return an [`Error`] if any of the arguments
 	/// are larger than 100 due to the fact that they represent percentages.
@@ -33,6 +36,7 @@ impl Cmyk {
 	/// let cyan = Cmyk::new(100, 0, 0, 0)?;
 	/// # Ok::<(), color_conv::Error>(())
 	/// ```
+	///
 	pub fn new(cyan: u8, magenta: u8, yellow: u8, key: u8) -> Result<Self, Error> {
 		if ![cyan, magenta, yellow, key].iter().all(|val| *val <= 100) {
 			return Err(Error::PercentageOverflow);
@@ -41,6 +45,7 @@ impl Cmyk {
 		Ok(Self::new_unchecked(cyan, magenta, yellow, key))
 	}
 
+	///
 	/// See [`Cmyk::new`](self::Cmyk::new). Does not perform check to ensure
 	/// that all parameters are less than or equal to 100. This is useful for
 	/// when you know more than the compiler about which values are being passed
@@ -52,6 +57,7 @@ impl Cmyk {
 	/// use color_conv::Cmyk;
 	/// let cyan = Cmyk::new_unchecked(100, 0, 0, 0);
 	/// ```
+	///
 	pub fn new_unchecked(cyan: u8, magenta: u8, yellow: u8, key: u8) -> Self {
 		Self {
 			cyan,

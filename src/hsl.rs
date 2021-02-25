@@ -1,8 +1,10 @@
 use crate::{Cmyk, Color, Error, Rgb};
 use std::fmt;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+///
 /// A representation of the HSL (cyan, magenta, yellow, key) color format.
+///
+#[derive(Clone, Copy, PartialEq, Eq, Debug, Hash)]
 pub struct Hsl {
 	/// Hue value (in degrees)
 	pub hue: u16,
@@ -13,6 +15,7 @@ pub struct Hsl {
 }
 
 impl Hsl {
+	///
 	/// Returns a Result containing a new Hsl object given hue, saturation,
 	/// and lightness values. Will return an [`Error`] if either the saturation
 	/// or lightness are larger than 100 due to the fact that they represent
@@ -32,6 +35,7 @@ impl Hsl {
 	/// let cyan = Hsl::new(180, 100, 50)?;
 	/// # Ok::<(), color_conv::Error>(())
 	/// ```
+	///
 	pub fn new(hue: u16, saturation: u8, lightness: u8) -> Result<Self, Error> {
 		if !(saturation <= 100 && lightness <= 100) {
 			return Err(Error::PercentageOverflow);
@@ -44,6 +48,7 @@ impl Hsl {
 		Ok(Self::new_unchecked(hue, saturation, lightness))
 	}
 
+	///
 	/// See [`Hsl::new`](self::Hsl::new). Does not perform check to ensure
 	/// that all parameters are valid. This is useful for when you know more
 	/// than the compiler about which values are being passed to the method.
@@ -54,6 +59,7 @@ impl Hsl {
 	/// use color_conv::Hsl;
 	/// let cyan = Hsl::new_unchecked(180, 100, 50);
 	/// ```
+	///
 	pub fn new_unchecked(hue: u16, saturation: u8, lightness: u8) -> Self {
 		Self {
 			hue,
