@@ -4,7 +4,7 @@
 
 ```toml
 [dependencies]
-color_conv = "0.2"
+color_conv = "0.2.1"
 ```
 
 # Example
