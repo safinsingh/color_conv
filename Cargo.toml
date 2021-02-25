@@ -1,0 +1,10 @@
+[package]
+name = "color_conv"
+version = "0.1.0"
+authors = ["Safin Singh <safin.singh@gmail.com>"]
+edition = "2018"
+license = "GPL-3.0"
+description = "A color conversion library for Rust"
+
+[dependencies]
+thiserror = "1.0.24"

@@ -1,0 +1,4 @@
+max_width = 100
+hard_tabs = true
+wrap_comments = true
+reorder_imports = true
