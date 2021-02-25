@@ -10,3 +10,7 @@ keywords = ["color", "rgb", "hex", "cmyk", "hsl"]
 
 [dependencies]
 thiserror = "1.0.24"
+
+[dev-dependencies]
+anyhow = "1.0.38"
+rustyline = "7.1.0"
