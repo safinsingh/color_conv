@@ -1,5 +1,7 @@
-use crate::{Color, Error, Hsl, Rgb};
-use std::fmt;
+#[allow(unused_imports)]
+use crate::prelude::*;
+use crate::{Color, Error, Float, Hsl, Rgb};
+use core::fmt;
 
 ///
 /// A representation of the CMYK (cyan, magenta, yellow, key) color format.
@@ -81,7 +83,7 @@ impl fmt::Display for Cmyk {
 impl Color for Cmyk {
 	fn to_rgb(self) -> Rgb {
 		let apply =
-			|v| (255. * (1f64 - v as f64 / 100.) * (1. - self.key as f64 / 100.)).round() as u8;
+			|v| (255. * (1. - v as Float / 100.) * (1. - self.key as Float / 100.)).round() as u8;
 
 		let red = apply(self.cyan);
 		let green = apply(self.magenta);

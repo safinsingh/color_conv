@@ -4,6 +4,7 @@
 	trivial_casts,
 	trivial_numeric_casts
 )]
+#![cfg_attr(feature = "no_std", no_std)]
 
 //!
 //! `color_conv` is a helper library for easily and programmatically converting
@@ -36,28 +37,60 @@ pub mod hsl;
 pub mod rgb;
 
 pub use self::{cmyk::Cmyk, hsl::Hsl, rgb::Rgb};
-use thiserror::Error as ThisError;
 
-#[derive(ThisError, Debug)]
-///
-/// Crate-wide Error type.
-///
-pub enum Error {
-	///
-	/// Occurs when a parameter representing a percentage value is greater than
-	/// 100. This error can be thrown by [`Cmyk::new`](crate::Cmyk::new) or
-	/// [`Hsl::new`](crate::Hsl::new), both of which perform this check.
-	///
-	#[error("Percentage overflow: value is larger than 100!")]
-	PercentageOverflow,
-	///
-	/// Occurs when a parameter representing a degree value is greater than 360.
-	/// 100. This error can be thrown by  [`Hsl::new`](crate::Hsl::new), which
-	/// performs this check.
-	///
-	#[error("Degree overflow: value is larger than 360!")]
-	DegreeOverflow,
+#[cfg(feature = "f32")]
+type Float = f32;
+#[cfg(not(feature = "f32"))]
+type Float = f64;
+
+#[cfg(feature = "no_std")]
+mod prelude {
+	pub use num_traits::Float as _;
+	pub use num_traits::FloatConst as _;
+
+	extern crate alloc;
+	pub use alloc::format;
+	pub use alloc::string::String;
+	pub use alloc::string::ToString;
+
+	/// Crate-wide Error type.
+	#[derive(Debug)]
+	pub enum Error {
+		/// Occurs when a parameter representing a percentage value is greater
+		/// than 100. This error can be thrown by
+		/// [`Cmyk::new`](crate::Cmyk::new) or [`Hsl::new`](crate::Hsl::new),
+		/// both of which perform this check.
+		PercentageOverflow,
+		/// Occurs when a parameter representing a degree value is greater than
+		/// 360. 100. This error can be thrown by
+		/// [`Hsl::new`](crate::Hsl::new), which performs this check.
+		DegreeOverflow,
+	}
 }
+#[cfg(not(feature = "no_std"))]
+mod prelude {
+	use thiserror::Error as ThisError;
+
+	/// Crate-wide Error type.
+	#[derive(ThisError, Debug)]
+	pub enum Error {
+		/// Occurs when a parameter representing a percentage value is greater
+		/// than 100. This error can be thrown by
+		/// [`Cmyk::new`](crate::Cmyk::new) or [`Hsl::new`](crate::Hsl::new),
+		/// both of which perform this check.
+		#[error("Percentage overflow: value is larger than 100!")]
+		PercentageOverflow,
+		/// Occurs when a parameter representing a degree value is greater than
+		/// 360. 100. This error can be thrown by
+		/// [`Hsl::new`](crate::Hsl::new), which performs this check.
+		#[error("Degree overflow: value is larger than 360!")]
+		DegreeOverflow,
+	}
+}
+#[allow(unused_imports)]
+use prelude::*;
+
+pub use prelude::Error;
 
 ///
 /// Unifying `Color` trait which encompasses each of the structs provided by
