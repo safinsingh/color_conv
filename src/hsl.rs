@@ -1,5 +1,7 @@
-use crate::{Cmyk, Color, Error, Rgb};
-use std::fmt;
+#[allow(unused_imports)]
+use crate::prelude::*;
+use crate::{Cmyk, Color, Error, Float, Rgb};
+use core::fmt;
 
 ///
 /// A representation of the HSL (cyan, magenta, yellow, key) color format.
@@ -95,10 +97,10 @@ macro_rules! exclusive_range_workaround {
 
 impl Color for Hsl {
 	fn to_rgb(self) -> Rgb {
-		let c = (1. - ((2. * (self.lightness as f64 / 100.)) - 1.).abs())
-			* (self.saturation as f64 / 100.);
-		let x = c * (1. - ((((self.hue as f64) / 60.) % 2.) - 1.).abs());
-		let m = (self.lightness as f64 / 100.) - (c / 2.);
+		let c = (1. - ((2. * (self.lightness as Float / 100.)) - 1.).abs())
+			* (self.saturation as Float / 100.);
+		let x = c * (1. - ((((self.hue as Float) / 60.) % 2.) - 1.).abs());
+		let m = (self.lightness as Float / 100.) - (c / 2.);
 
 		let (r_prime, g_prime, b_prime) = exclusive_range_workaround! { self,
 			0..60 => (c, x, 0.),
@@ -109,7 +111,7 @@ impl Color for Hsl {
 			300..360 => (c, 0., x)
 		};
 
-		let apply = |v: f64| ((v + m) * 255.).round() as u8;
+		let apply = |v: Float| ((v + m) * 255.).round() as u8;
 		let red = apply(r_prime);
 		let green = apply(g_prime);
 		let blue = apply(b_prime);

@@ -1,5 +1,7 @@
-use crate::{Cmyk, Color, Hsl};
-use std::fmt;
+#[allow(unused_imports)]
+use crate::prelude::*;
+use crate::{Cmyk, Color, Float, Hsl};
+use core::fmt;
 
 ///
 /// A representation of the RGB (red, green, blue) color format.
@@ -42,22 +44,22 @@ impl Rgb {
 	}
 
 	fn _to_cmyk(self) -> (u8, u8, u8, u8) {
-		let r_prime = self.red as f64 / 255.;
-		let g_prime = self.green as f64 / 255.;
-		let b_prime = self.blue as f64 / 255.;
+		let r_prime = self.red as Float / 255.;
+		let g_prime = self.green as Float / 255.;
+		let b_prime = self.blue as Float / 255.;
 
 		let key = 1.
 			- [r_prime, g_prime, b_prime]
 				.iter()
 				.cloned()
-				.fold(f64::NAN, f64::max);
+				.fold(Float::NAN, Float::max);
 
-		let apply = |v: f64| (((1. - v - key) / (1. - key)) * 100.).round();
+		let apply = |v: Float| (((1. - v - key) / (1. - key)) * 100.).round() as u8;
 		let cyan = apply(r_prime);
 		let magenta = apply(g_prime);
 		let yellow = apply(b_prime);
 
-		(cyan as u8, magenta as u8, yellow as u8, (key * 100.) as u8)
+		(cyan, magenta, yellow, (key * 100.) as u8)
 	}
 }
 
@@ -84,16 +86,16 @@ impl Color for Rgb {
 	fn to_hsl(self) -> Hsl {
 		let Self { red, green, blue } = self;
 
-		let r_prime = red as f64 / 255.;
-		let g_prime = green as f64 / 255.;
-		let b_prime = blue as f64 / 255.;
+		let r_prime = red as Float / 255.;
+		let g_prime = green as Float / 255.;
+		let b_prime = blue as Float / 255.;
 
-		let c_max = [red, green, blue].iter().max().cloned().unwrap() as f64 / 255.;
-		let c_min = [red, green, blue].iter().min().cloned().unwrap() as f64 / 255.;
+		let c_max = [red, green, blue].iter().max().cloned().unwrap() as Float / 255.;
+		let c_min = [red, green, blue].iter().min().cloned().unwrap() as Float / 255.;
 
 		let delta = c_max - c_min;
 
-		let hue = if (delta - 0.) < f64::EPSILON {
+		let hue = if delta.abs() < Float::EPSILON {
 			0
 		} else {
 			match c_max {
@@ -107,7 +109,7 @@ impl Color for Rgb {
 
 		let lightness = (c_max + c_min) / 2.;
 
-		let saturation = if (delta - 0.) < f64::EPSILON {
+		let saturation = if delta.abs() < Float::EPSILON {
 			0
 		} else {
 			(delta / (1. - ((2. * lightness) - 1.)) * 100.).round() as u8
